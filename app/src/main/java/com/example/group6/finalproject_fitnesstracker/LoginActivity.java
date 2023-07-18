@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import org.androidannotations.annotations.EActivity;
+
+@EActivity
 public class LoginActivity extends AppCompatActivity {
-    //hello
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
