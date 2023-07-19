@@ -2,16 +2,20 @@ package madriaga.labs;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -24,6 +28,21 @@ import io.realm.RealmResults;
 public class Welcome extends AppCompatActivity {
     @ViewById
     TextView welcome;
+    @ViewById
+    TextView userheight;
+    @ViewById
+    TextView userweight;
+    @ViewById
+    TextView userfullname;
+    @ViewById
+    TextView userdesc;
+    @ViewById
+    Button savuse;
+    @ViewById
+    Button backuse;
+    @ViewById
+    Button deluse;
+
     @ViewById
     ImageView imageView3;
 
@@ -78,6 +97,67 @@ public class Welcome extends AppCompatActivity {
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(imageView);
     }
+
+    @Click
+    public void savuse(){
+        String ufn = userfullname.getText().toString();
+        String ush = userheight.getText().toString();
+        String usw =userweight.getText().toString();
+        String usde =userdesc.getText().toString();
+        if (!ush.equals("") && !usw.equals("")) {
+            Float calcbmi = (Float.valueOf(usw) / (Float.valueOf(ush) * Float.valueOf(ush)));
+            if (!ufn.equals("") && !ush.equals("") && !usw.equals("") && !usde.equals("")) {
+                SharedPreferences info = getSharedPreferences("data", 0);
+                String welc = info.getString("UUIDS", "");
+                User newUser = realm.where(User.class).equalTo("uuid", welc).findFirst();
+
+                realm.beginTransaction();
+                newUser.setRealname(ufn);
+                newUser.setHeight(Float.valueOf(ush));
+                newUser.setWeight(Float.valueOf(usw));
+                newUser.setDescription(usde);
+                newUser.setBmi(calcbmi);
+                realm.commitTransaction();
+                try{
+                    realm.beginTransaction();
+                    realm.copyToRealmOrUpdate(newUser);
+                    realm.commitTransaction();
+
+                    Toast t = Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
+                    t.show();
+                    Toast.makeText(this, "test show realm"+newUser, Toast.LENGTH_SHORT).show();
+                }
+                catch(Exception e)
+                {
+                    Toast t = Toast.makeText(this, "Error saving", Toast.LENGTH_LONG);
+                    t.show();
+                }
+            }
+            else {Toast.makeText(this, "All fields must be filled.", Toast.LENGTH_SHORT).show();}
+
+        }
+        else {Toast.makeText(this, "All fields must be filled.", Toast.LENGTH_SHORT).show();}
+
+    }
+
+    @Click
+    public void backuse(){Intent h = new Intent(this, Login_.class);
+        startActivity(h);}
+
+    @Click
+    public void deluse(){
+        SharedPreferences info = getSharedPreferences("data", 0);
+        String welc = info.getString("UUIDS", "");
+        User newUser = realm.where(User.class).equalTo("uuid", welc).findFirst();
+        if (newUser.isValid()) {
+            realm.beginTransaction();
+            newUser.deleteFromRealm();
+            realm.commitTransaction();
+            Intent h = new Intent(this, Login_.class);
+            startActivity(h);
+        }
+    }
+
 
 
 

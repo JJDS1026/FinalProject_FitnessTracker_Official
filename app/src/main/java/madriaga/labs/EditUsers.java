@@ -203,7 +203,6 @@ public class EditUsers extends AppCompatActivity {
         String user = usernameed.getText().toString();
         String pass = userpassworded.getText().toString();
         String pass2 = regpassconfirmed.getText().toString();
-        realm = Realm.getDefaultInstance();
         RealmResults<User> list = realm.where(User.class).findAll();
         User ename =  realm.where(User.class).equalTo("usernames", usernameed.getText().toString()).findFirst();
 
