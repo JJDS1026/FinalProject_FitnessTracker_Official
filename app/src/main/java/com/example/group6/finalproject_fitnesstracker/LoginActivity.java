@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
                     finish();
 
-                    Intent w = new Intent(this, Welcome_.class);
+                    Intent w = new Intent(this, WelcomeActivity_.class);
                     startActivity(w);
 
                 }
@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Click public void reg()
     {
-        Intent h = new Intent(this, Admin_.class);
+        Intent h = new Intent(this, AdminActivity_.class);
         startActivity(h);
     }
 
