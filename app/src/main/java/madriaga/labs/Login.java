@@ -93,7 +93,6 @@ public class Login extends AppCompatActivity {
         String u = username.getText().toString();
         String p = userpassword.getText().toString();
         info = getSharedPreferences("data", 0);
-        realm = Realm.getDefaultInstance();
         RealmResults<User> t = realm.where(User.class).findAll();
         User ename =  realm.where(User.class).equalTo("usernames", username.getText().toString()).findFirst();
         if (((realm.where(User.class)).count())==0){Toast.makeText(this, "Nothing saved", Toast.LENGTH_SHORT).show();}
